@@ -7,6 +7,11 @@ $(document).ready(function(){
             createTodo();
         }
     });
+    //cannot add listener directly to span cause they're not there when the èage loads, but the class list is
+    $('.list').on('click', 'span', function(e){
+        e.stopPropagation();
+        removeTodo($(this).parent());
+    });
 });
 
 function addTodos(todos){
@@ -16,7 +21,8 @@ function addTodos(todos){
 }
 
 function addTodo(todo){
-    var newTodo = $('<li class="task">' + todo.name + '</li>');
+    var newTodo = $('<li class="task">' + todo.name + '<span>X</span></li>');
+    newTodo.data('id', todo._id);
     if(todo.completed){
         newTodo.addClass("done");
     }
@@ -33,4 +39,19 @@ function createTodo(){
     .catch(function(err){
         console.log(err);
     })
+}
+
+function removeTodo(todo){
+    var clickedId = todo.data('id');
+    var deleteUrl = '/api/todos/' + clickedId;
+    $.ajax({
+        method: 'DELETE',
+        url: deleteUrl 
+    })
+    .then(function(data){
+        todo.remove();
+    })
+    .catch(function(err){
+        console.log(err);
+  })
 }
