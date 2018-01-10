@@ -58,7 +58,7 @@ function updateTodo(todo){
     })
     .then(function(updatedTodo){
         todo.toggleClass("done");
-        todo.data('completed', isDone );
+        todo.data('completed', isDone);
     })
     .catch(function(err){
         console.log(err );
